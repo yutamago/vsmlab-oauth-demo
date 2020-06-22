@@ -15,10 +15,13 @@
  */
 package org.springframework.security.oauth.samples.web;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 /**
  * @author Joe Grandja
@@ -26,23 +29,41 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MessagesController {
 
-	@GetMapping("/messages")
-	public String[] getMessages() {
-		String[] messages = new String[] {"Message 1", "Message 2", "Message 3"};
-		return messages;
-	}
-	
-	
-	
-	@GetMapping("/messages/infoToken")
-	public String resource(@AuthenticationPrincipal Jwt jwt) {
-		String test = jwt.getClaims();
-	    return String.format("Token info:\n user_name: "); //%s \n client_id: %s\n expiration: %s\n scopes: %s\n (subjectId: %s)" ,
+    @GetMapping("/messages")
+    public String[] getMessages() {
+        String[] messages = new String[]{"Message 1", "Message 2", "Message 3"};
+        return messages;
+    }
+
+
+    @GetMapping("/messages/infoToken")
+    public String resource(final Principal principal) {
+        System.out.println("get Principal");
+
+//		String test = jwt.getClaims();
+//	    return String.format("Token info:\n user_name: "); //%s \n client_id: %s\n expiration: %s\n scopes: %s\n (subjectId: %s)" ,
 //	            jwt.getClaims().get("user_name"),
 //	            jwt.getClaims().get("client_id"),
 //	            jwt.getClaims().get("exp"),
 //	            jwt.getClaims().get("scope"),
 //	            jwt.getSubject());
-	    }
+
+        return principal.toString();
+    }
+
+    @GetMapping("/messages/infoTokenEntity")
+    public ResponseEntity<Principal> get(final Principal principal) {
+        System.out.println("get Principal as Response Entity");
+
+//		String test = jwt.getClaims();
+//	    return String.format("Token info:\n user_name: "); //%s \n client_id: %s\n expiration: %s\n scopes: %s\n (subjectId: %s)" ,
+//	            jwt.getClaims().get("user_name"),
+//	            jwt.getClaims().get("client_id"),
+//	            jwt.getClaims().get("exp"),
+//	            jwt.getClaims().get("scope"),
+//	            jwt.getSubject());
+
+        return ResponseEntity.ok(principal);
+    }
 
 }
